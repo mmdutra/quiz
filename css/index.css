@@ -62,3 +62,19 @@ body {
     padding-top: 30px;
     font-size: 35px;
 }
+
+.resposta {
+    cursor: pointer;
+    display: block;
+    padding: 20px;
+    margin-top: 20px;
+    border: 1px solid #0080ff;
+    transition: .4s;
+}
+
+.resposta:hover {
+    text-decoration: none;
+    background: #0080ff;
+    color: #fff;
+    border: 1px solid #fff;
+}
