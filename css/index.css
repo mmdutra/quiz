@@ -24,6 +24,10 @@ body {
     padding-top: 100px;
 }
 
+#pergunta {
+    align-items: center;
+}
+
 #idperguntas {
     display: flex;
 }
@@ -77,4 +81,20 @@ body {
     background: #0080ff;
     color: #fff;
     border: 1px solid #fff;
+}
+
+#loading-screen{
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#loading-screen p{
+    text-align: center;
+    font-size: 18px;
+}
+
+#loading-screen img{
+    width: 200px;
+    height: 200px;
 }
