@@ -1,29 +1,10 @@
-const lugares   = new Array();
-
-
-// INSERINDO OS POSSIVEIS RESULTADOS DO QUIZ
-lugares[0] = {
-    'nome': 'Cordilheira dos Andes',
-    'resultados': [
-        'Neve',
-        'Amigos',
-        'Sim'
-    ]
-}
-
-lugares[1] = {
-    'nome': 'Rio de Janeiro',
-    'resultados': [
-        'Praia',
-        'Família',
-        'Não'
-    ]
-}
-
 // GUARDANDO O NUMERO DA PERGUNTA ATUAL
 var pergunta_atual = 1; 
 
 class Quiz {
+
+    lugares   = new Array();
+
     constructor() {
         this.nome = "";
         this.campo_pergunta = document.getElementById("conteudo-perguntas");
@@ -56,29 +37,70 @@ class Quiz {
     // INSERINDO AS PERGUNTAS DO QUIZ 
     atribuir_valores = function(){
         this.perguntas[0] = {
-            'descricao': 'Dos seguintes ambientes quais você mais se identifica?',
+            'descricao': 'Qual das palavras abaixo te resume melhor?',
             'respostas': [
-                'Praia',
-                'Neve',
-                'Deserto',
+                'Tranquilidade',
+                'Agitação',
+                'Aventura',
             ]
         }
     
         this.perguntas[1] = {
-            'descricao': 'Gosta de que tipo de companhia?',
+            'descricao': 'Como você prefere viajar?',
             'respostas': [
-                'Nenhuma',
-                'Família',
-                'Amigos',
+                'Sozinho',
+                'Com amigos',
+                'Com a família',
+                'Qualquer companhia serve!'
             ]
         }
     
         this.perguntas[2] = {
-            'descricao': 'No céu tem pão?',
+            'descricao': 'O que você aprecia mais?',
             'respostas': [
-                'Sim',
-                'Não',
-                'Sei lá',
+                'Belas paisagens naturais',
+                'Arquitetura moderna',
+                'Templos ou castelos',
+            ]
+        }
+
+        this.perguntas[3] = {
+            'descricao': 'O que você procura em uma viagem?',
+            'respostas': [
+                'Visitar locais que ficaram marcados na história,visitar museus, descobrir construções e monumentos milenares e aprender mais sobre o passado.',
+                'Visitar vilas e feiras locais, experimentar a culinária local, estar em contato com as pessoas, seus costumes e tradições.',
+                'Visitar paisagens naturais, participar de trilhas, aprender sobre a biodiversidade local.',
+            ]
+        }
+
+        // INSERINDO OS POSSIVEIS RESULTADOS DO QUIZ
+        this.lugares[0] = {
+            'nome': 'Cordilheira dos Andes',
+            'resultados': [
+                'Tranquilidade',
+                'Com a família',
+                'Belas paisagens naturais',
+                'Visitar paisagens naturais, participar de trilhas, aprender sobre a biodiversidade local.'
+            ]
+        }
+
+        this.lugares[1] = {
+            'nome': 'Rio de Janeiro',
+            'resultados': [
+                'Agitação',
+                'Com amigos',
+                'Belas paisagens naturais',
+                'Visitar paisagens naturais, participar de trilhas, aprender sobre a biodiversidade local.'
+            ]
+        }
+
+        this.lugares[1] = {
+            'nome': 'Londres',
+            'resultados': [
+                'Tranquilidade',
+                'Sozinho',
+                'Templos ou castelos',
+                'Visitar locais que ficaram marcados na história,visitar museus, descobrir construções e monumentos milenares e aprender mais sobre o passado.'
             ]
         }
     }
@@ -89,7 +111,7 @@ class Quiz {
         this.perguntas[posicao].respostas.forEach(function(resp){
             resps += "<a onclick='javascript:registrar_resposta(this)' class='resposta'>" + resp + "</a>";
         });
-        document.getElementById("pergunta" + (posicao)).classList.remove("active");
+        if (posicao != 0) document.getElementById("pergunta" + (posicao)).classList.remove("active");
         document.getElementById("pergunta" + (posicao+1)).classList.add("active");
         this.opcoes_respostas.innerHTML = resps;
     }
@@ -104,7 +126,6 @@ function pular_pergunta(){
     }else {
         // FINAL DO JOGO
         catalogar_resultado();
-        pergunta_atual = 0;
     }
 }
 
@@ -120,26 +141,43 @@ function catalogar_resultado(){
     document.getElementById("pergunta").innerHTML = "<div id='loading-screen'><p>Processando resultado</p><img id='loading-screen' src='image/loading.gif'></div>";
     setTimeout(function(){
         var i = 0;
-        var contador = 0, maisProximo = 0, id_mais_proximo = 0;
-        lugares.forEach(function(lugar){
+        var contador = 0, maisProximo = 0, id_mais_proximo = 0, peso = 2;
+        quiz.lugares.forEach(function(lugar){
             lugar.resultados.forEach(function(lugar_result){
                 quiz.respUsuario.forEach(function(resp){
-                    if (lugar_result == resp) contador++;
+                    if (lugar_result == resp) contador ++;
                 });
+                peso --;
             });
             if (contador > maisProximo) {
                 maisProximo = contador;
                 id_mais_proximo = i;
             }
-            contador = 0;
+            peso = 3;
+            contador = 1;
             i++; 
         });
-        document.getElementById("pergunta").innerHTML = " <h1> O melhor local para você viajar é " + lugares[id_mais_proximo].nome + " </h1> "
-    }, 200);
+        document.getElementById("pergunta").innerHTML = " <h1> O melhor local para você viajar é " + quiz.lugares[id_mais_proximo].nome + " </h1> "
+    }, 1000);
+    document.getElementById("btn-reset").style.display = 'block';
+}
+
+
+function reset_game(){
+    pergunta_atual = 1;
+    var cont = 0;
+    var idperguntas = "";
+    quiz.perguntas.forEach(function (e){
+        cont++;
+        idperguntas += "<a id='pergunta" + cont + "' class='idpergunta'>"  + cont + "</a>";
+    });
+    quiz.menu_pergunta.innerHTML = idperguntas;
+    quiz.preencher_campos(0);
 }
 
 // EXECUCAO INICIAL
 window.onload = function(){
     quiz = new Quiz();
     quiz.listar_pergunta_inicial();
+    document.getElementById("btn-reset").style.display = 'none';
 }
