@@ -23,6 +23,7 @@ class Quiz {
             cont++;
             idperguntas += "<a id='pergunta" + cont + "' class='idpergunta'>"  + cont + "</a>";
         });
+        console.log(idperguntas);
         this.menu_pergunta.innerHTML = idperguntas;
         this.campo_pergunta.innerHTML = "<h1>" + this.perguntas[0].descricao + "</h1>";
         this.perguntas[0].respostas.forEach(function(resp){
@@ -77,7 +78,7 @@ class Quiz {
         this.lugares[0] = {
             'nome': 'Cordilheira dos Andes',
             'resultados': [
-                'Tranquilidade',
+                'Aventura',
                 'Com a família',
                 'Belas paisagens naturais',
                 'Visitar paisagens naturais, participar de trilhas, aprender sobre a biodiversidade local.'
@@ -85,16 +86,16 @@ class Quiz {
         }
 
         this.lugares[1] = {
-            'nome': 'Rio de Janeiro',
+            'nome': 'Porto Seguro',
             'resultados': [
                 'Agitação',
                 'Com amigos',
                 'Belas paisagens naturais',
-                'Visitar paisagens naturais, participar de trilhas, aprender sobre a biodiversidade local.'
+                'Visitar vilas e feiras locais, experimentar a culinária local, estar em contato com as pessoas, seus costumes e tradições.'
             ]
         }
 
-        this.lugares[1] = {
+        this.lugares[2] = {
             'nome': 'Londres',
             'resultados': [
                 'Tranquilidade',
@@ -138,26 +139,30 @@ function registrar_resposta(obj){
 
 // FUNCAO PARA CALCULO DO RESULTADO
 function catalogar_resultado(){
-    document.getElementById("pergunta").innerHTML = "<div id='loading-screen'><p>Processando resultado</p><img id='loading-screen' src='image/loading.gif'></div>";
+    quiz.menu_pergunta.style.display = 'none';
+    quiz.campo_pergunta.style.display = 'none';
+    quiz.opcoes_respostas.style.display = 'none';
+    document.getElementById("resultado").innerHTML = "<div id='loading-screen'><p>Processando resultado</p><img id='loading-screen' src='image/loading.gif'></div>";
     setTimeout(function(){
         var i = 0;
-        var contador = 0, maisProximo = 0, id_mais_proximo = 0, peso = 2;
+        var contador = 0, maisProximo = 0, id_mais_proximo = 0;
         quiz.lugares.forEach(function(lugar){
             lugar.resultados.forEach(function(lugar_result){
                 quiz.respUsuario.forEach(function(resp){
-                    if (lugar_result == resp) contador ++;
+                    if (lugar_result == resp) {
+                        
+                        contador ++;
+                    }
                 });
-                peso --;
             });
             if (contador > maisProximo) {
                 maisProximo = contador;
                 id_mais_proximo = i;
             }
-            peso = 3;
-            contador = 1;
+            contador = 0;
             i++; 
         });
-        document.getElementById("pergunta").innerHTML = " <h1> O melhor local para você viajar é " + quiz.lugares[id_mais_proximo].nome + " </h1> "
+        document.getElementById("resultado").innerHTML = " <h1> O melhor local para você viajar é " + quiz.lugares[id_mais_proximo].nome + " </h1> "
     }, 1000);
     document.getElementById("btn-reset").style.display = 'block';
 }
@@ -165,14 +170,12 @@ function catalogar_resultado(){
 
 function reset_game(){
     pergunta_atual = 1;
-    var cont = 0;
-    var idperguntas = "";
-    quiz.perguntas.forEach(function (e){
-        cont++;
-        idperguntas += "<a id='pergunta" + cont + "' class='idpergunta'>"  + cont + "</a>";
-    });
-    quiz.menu_pergunta.innerHTML = idperguntas;
-    quiz.preencher_campos(0);
+    document.getElementById("resultado").innerHTML = "";
+    quiz.menu_pergunta.style.display = 'block';
+    quiz.campo_pergunta.style.display = 'block';
+    quiz.opcoes_respostas.style.display = 'block';
+    document.getElementById("btn-reset").style.display = 'none';
+    quiz.listar_pergunta_inicial();
 }
 
 // EXECUCAO INICIAL
